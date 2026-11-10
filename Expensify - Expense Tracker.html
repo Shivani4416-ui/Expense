@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expensify - Expense Tracker</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+
+            <div>
+                <h2>Expensify</h2>
+                <span>Expense Tracker</span>
+            </div>
+        </div>
+
+        <nav>
+
+            <button class="nav-item active" data-page="dashboard">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </button>
+
+            <button class="nav-item" data-page="transactions">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Transactions</span>
+            </button>
+
+            <button class="nav-item" data-page="add">
+                <i class="fa-solid fa-plus"></i>
+                <span>Add Transaction</span>
+            </button>
+
+            <button class="nav-item" data-page="analytics">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Analytics</span>
+            </button>
+
+            <button class="nav-item" data-page="settings">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </button>
+
+        </nav>
+
+        <div class="theme-box">
+            <span>
+                <i class="fa-solid fa-moon"></i>
+                Dark Mode
+            </span>
+
+            <label class="switch">
+                <input type="checkbox" id="themeToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div>
+                <h1 id="pageTitle">Dashboard</h1>
+                <p id="pageSubtitle">Overview of your finances</p>
+            </div>
+
+            <div class="top-actions">
+                <button class="icon-btn">
+                    <i class="fa-regular fa-bell"></i>
+                </button>
+
+                <div class="profile">
+                    <span>U</span>
+                </div>
+            </div>
+
+        </header>
+
+
+        <section class="page active-page" id="dashboard">
+
+            <div class="date-badge">
+                <i class="fa-regular fa-calendar"></i>
+                <span id="currentDate"></span>
+            </div>
+
+
+            <!-- SUMMARY CARDS -->
+
+            <div class="summary-grid">
+
+                <div class="summary-card balance-card">
+
+                    <div class="card-icon blue">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <div>
+                        <p>Total Balance</p>
+                        <h2 id="totalBalance">₹0.00</h2>
+                        <small>Current balance</small>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon green">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </div>
+
+                    <div>
+                        <p>Total Income</p>
+                        <h2 id="totalIncome">₹0.00</h2>
+                        <small>Money received</small>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon red">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </div>
+
+                    <div>
+                        <p>Total Expenses</p>
+                        <h2 id="totalExpense">₹0.00</h2>
+                        <small>Money spent</small>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="card-icon purple">
+                        <i class="fa-solid fa-list"></i>
+                    </div>
+
+                    <div>
+                        <p>Transactions</p>
+                        <h2 id="transactionCount">0</h2>
+                        <small>Total records</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="charts-grid">
+
+                <div class="chart-card monthly-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Spending Overview</h3>
+                            <p>Income and expenses by month</p>
+                        </div>
+
+                        <select id="yearSelect">
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                        </select>
+
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+
+                </div>
+
+                <div class="chart-card category-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Expenses by Category</h3>
+                            <p>Where your money goes</p>
+                        </div>
+
+                    </div>
+
+                    <div class="donut-container">
+                        <canvas id="categoryChart"></canvas>
+
+                        <div class="donut-center">
+                            <strong id="categoryTotal">₹0.00</strong>
+                            <span>Total</span>
+                        </div>
+                    </div>
+
+                    <div id="categoryLegend" class="category-legend"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="recent-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h3>Recent Transactions</h3>
+                        <p>Your latest financial activity</p>
+                    </div>
+
+                    <button class="view-btn" id="viewAllBtn">
+                        View All →
+                    </button>
+
+                </div>
+
+                <div id="recentTransactions"></div>
+
+            </div>
+
+        </section>
+
+
+        <section class="page" id="transactions">
+
+            <div class="section-heading">
+                <h2>Transactions</h2>
+                <p>Manage all your income and expenses</p>
+            </div>
+
+            <div class="filter-bar">
+
+                <div class="search-box">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text"
+                           id="searchInput"
+                           placeholder="Search transactions...">
+                </div>
+
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="Food">Food</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Health">Health</option>
+                    <option value="Education">Education</option>
+                    <option value="Salary">Salary</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <select id="typeFilter">
+                    <option value="all">All Types</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+
+                <select id="sortFilter">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="high">Highest Amount</option>
+                    <option value="low">Lowest Amount</option>
+                </select>
+
+            </div>
+
+            <div class="transactions-card">
+                <div id="allTransactions"></div>
+            </div>
+
+        </section>
+
+
+        <section class="page" id="add">
+
+            <div class="section-heading">
+                <h2>Add Transaction</h2>
+                <p>Record your income or expense</p>
+            </div>
+
+            <div class="form-card">
+
+                <form id="transactionForm">
+
+                    <div class="type-selector">
+
+                        <label class="type-option income-option">
+                            <input type="radio"
+                                   name="transactionType"
+                                   value="income"
+                                   checked>
+                            <span>
+                                <i class="fa-solid fa-arrow-down"></i>
+                                Income
+                            </span>
+                        </label>
+
+                        <label class="type-option expense-option">
+                            <input type="radio"
+                                   name="transactionType"
+                                   value="expense">
+                            <span>
+                                <i class="fa-solid fa-arrow-up"></i>
+                                Expense
+                            </span>
+                        </label>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Transaction Name</label>
+
+                        <input type="text"
+                               id="transactionText"
+                               placeholder="e.g. Grocery shopping"
+                               required>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Amount</label>
+
+                            <div class="amount-input">
+                                <span>₹</span>
+
+                                <input type="number"
+                                       id="transactionAmount"
+                                       placeholder="0.00"
+                                       min="0"
+                                       step="0.01"
+                                       required>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Category</label>
+
+                            <select id="transactionCategory">
+
+                                <option value="Food">Food</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Bills">Bills</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Health">Health</option>
+                                <option value="Education">Education</option>
+                                <option value="Salary">Salary</option>
+                                <option value="Other">Other</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Date</label>
+
+                        <input type="date"
+                               id="transactionDate"
+                               required>
+
+                    </div>
+
+
+                    <button class="submit-btn" type="submit">
+                        <i class="fa-solid fa-plus"></i>
+                        Add Transaction
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+        <section class="page" id="analytics">
+
+            <div class="section-heading">
+                <h2>Analytics</h2>
+                <p>Understand your spending habits</p>
+            </div>
+
+            <div class="analytics-grid">
+
+                <div class="analytics-card">
+                    <span>Average Expense</span>
+                    <strong id="averageExpense">₹0.00</strong>
+                </div>
+
+                <div class="analytics-card">
+                    <span>Largest Expense</span>
+                    <strong id="largestExpense">₹0.00</strong>
+                </div>
+
+                <div class="analytics-card">
+                    <span>Total Categories</span>
+                    <strong id="totalCategories">0</strong>
+                </div>
+
+            </div>
+
+            <div class="chart-card analytics-chart">
+
+                <div class="card-header">
+                    <div>
+                        <h3>Category Breakdown</h3>
+                        <p>Expense distribution</p>
+                    </div>
+                </div>
+
+                <div class="large-donut">
+                    <canvas id="analyticsCategoryChart"></canvas>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="page" id="settings">
+
+            <div class="section-heading">
+                <h2>Settings</h2>
+                <p>Manage your application</p>
+            </div>
+
+            <div class="settings-card">
+
+                <div class="setting-row">
+
+                    <div>
+                        <h3>Dark Mode</h3>
+                        <p>Use the dark purple theme</p>
+                    </div>
+
+                    <label class="switch">
+                        <input type="checkbox"
+                               id="settingsTheme"
+                               checked>
+                        <span class="slider"></span>
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+                        <h3>Currency</h3>
+                        <p>Display currency used by the tracker</p>
+                    </div>
+
+                    <strong>₹ INR</strong>
+
+                </div>
+
+
+                <div class="setting-row danger-row">
+
+                    <div>
+                        <h3>Clear All Data</h3>
+                        <p>Delete all saved transactions</p>
+                    </div>
+
+                    <button id="clearDataBtn" class="danger-btn">
+                        Clear Data
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
+
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>
